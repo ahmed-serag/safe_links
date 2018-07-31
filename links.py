@@ -26,7 +26,7 @@ class links():
         conn.close()    
         
     ####
-    def getLinks(self,public_link=None, platform=None, id=None):
+    def getLinks(self,filename=None, public_link=None, platform=None, id=None):
         conn= pymysql.connect(
                 host='localhost',  
                 user=self.username, 
@@ -35,6 +35,9 @@ class links():
                 port=self.port,
                 charset="utf8")
         cur = conn.cursor()
+        if filename:
+            cur.execute("SELECT * FROM `links` WHERE `file`= %s ", (filename))
+            link = cur.fetchall()
         if platform:
             cur.execute("SELECT * FROM `links` WHERE `platform`= %s ", (platform))
             link = cur.fetchall()
@@ -85,3 +88,18 @@ class links():
             return user
         return None
     ####
+    def updateLink(self, id, current_link, packup_link, user):
+        conn= pymysql.connect(
+                host='localhost',  
+                user=self.username, 
+                password=self.password, 
+                db=self.database,
+                port=self.port,
+                charset="utf8")
+        cur = conn.cursor()
+        cur.execute("""UPDATE `links`
+                SET public_link=%s, current_link=%s, packup_link=%s, user=%s 
+                WHERE id=%s""",(current_link, packup_link, user, id))
+        conn.commit()
+        cur.close() 
+        conn.close()

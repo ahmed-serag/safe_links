@@ -7,7 +7,7 @@ class user():
         self.password=password
         self.port=port
     ####
-    def addUser(self, username, password, type):
+    def addUser(self, username, password, type, api_login, api_key):
         ## check if user exist return user ID else, add in db and return ID
         conn= pymysql.connect(
                 host='localhost',  
@@ -22,8 +22,8 @@ class user():
         user = cur.fetchone()
         if not user:
             cur.execute("""INSERT INTO `user`
-                    (`username`, `password`, `type`) 
-                    VALUES (%s, %s, %s)""",(username, password, type))
+                    (`username`, `password`, `type`, `api_login`, `api_key`) 
+                    VALUES (%s, %s, %s, %s, %s)""",(username, password, type, api_login, api_key))
             conn.commit()
             cur.execute("SELECT LAST_INSERT_ID()")
             user = cur.fetchone()
@@ -48,15 +48,13 @@ class user():
         elif id: 
             cur.execute("SELECT * FROM `user` WHERE `id` = %s", (id))
             user = cur.fetchall()
-        elif mail:
-            cur.execute("SELECT * FROM `user` WHERE `username` = %s", (username))
+        else:
+            cur.execute("SELECT * FROM `user`")
             user = cur.fetchall()
         cur.close() 
         conn.close()
-        if user:
-            return user
-        else:
-            return None
+
+        return user
     ####    
     def login(self, password, mail=None, username=None):
         if mail:

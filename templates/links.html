@@ -33,7 +33,7 @@
               <p>Home</p>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active  ">
             <a class="nav-link" href="{{url_for('adduser')}}">
               <i class="material-icons">person</i>
               <p>Add User</p>
@@ -76,84 +76,29 @@
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header card-header-primary">
-                  <h4 class="card-title">Add New Link</h4>
-                  <p class="card-category">Make sure to choose the correct platform</p>
+                  <h4 class="card-title">Added Links</h4>
                 </div>
                 <div class="card-body">
-                  <form method="POST" action="{{url_for('add_link')}}">
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <select type="text" class="form-control" name="platform">
-                            <option value="streamango">Streamango</option>
-                            <option value="streamcherry">Streamcherry</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
                     <div class="row">
                       <div class="col-md-12">
                         <div class="form-group">
                           <label class="bmd-label-floating">Link</label>
-                          <textarea class="form-control" name="link" id="link" cols="30" rows="10"></textarea>
+                          <textarea class="form-control" name="old_links" id="old_link" cols="30" rows="10"></textarea>
                         </div>
                       </div>
                     </div>
-                    <button type="submit" class="btn btn-primary pull-right">Add Link</button>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                            <label class="bmd-label-floating">Link</label>
+                            <textarea class="form-control" name="new_links" id="new_link" cols="30" rows="10"></textarea>
+                            </div>
+                        </div>
+                    </div>
                     <div class="clearfix"></div>
-                  </form>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="card">
-                <div class="card-header card-header-primary">
-                  <h4 class="card-title ">Links Table</h4>
-                  <p class="card-category"> Here are all the links of our tool</p>
-                </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table">
-                      <thead class=" text-primary">
-                        <th>
-                          ID
-                        </th>
-                        <th>
-                          Platform
-                        </th>
-                        <th>
-                          current Link
-                        </th>
-                        <th>
-                          Public Link
-                        </th>
-                      </thead>
-                      <tbody>
-                        {% for link in links %}
-                        <tr>
-                          <td>
-                            {{link[0]}}
-                          </td>
-                          <td>
-                              {{link[2]}}
-                          </td>
-                          <td>
-                              {{link[4]}}
-                          </td>
-                          <td>
-                              {{link[1]}}
-                          </td>
-                        </tr>
-                        {% endfor %}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
           </div>
         </div>
       </div>

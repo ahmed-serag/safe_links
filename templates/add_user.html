@@ -27,13 +27,13 @@
       </div>
       <div class="sidebar-wrapper">
         <ul class="nav">
-          <li class="nav-item active  ">
+          <li class="nav-item">
             <a class="nav-link" href="/">
               <i class="material-icons">dashboard</i>
               <p>Home</p>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active  ">
             <a class="nav-link" href="{{url_for('adduser')}}">
               <i class="material-icons">person</i>
               <p>Add User</p>
@@ -48,7 +48,7 @@
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
         <div class="container-fluid">
           <div class="navbar-wrapper">
-            <a class="navbar-brand" href="#pablo">Home</a>
+            <a class="navbar-brand" href="#pablo">Add People</a>
           </div>
           <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
             <span class="sr-only">Toggle navigation</span>
@@ -76,30 +76,50 @@
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header card-header-primary">
-                  <h4 class="card-title">Add New Link</h4>
-                  <p class="card-category">Make sure to choose the correct platform</p>
+                  <h4 class="card-title">Add New person</h4>
+                  <p class="card-category">Make sure to Add Right Details</p>
                 </div>
                 <div class="card-body">
-                  <form method="POST" action="{{url_for('add_link')}}">
+                  <form method="POST" action="{{url_for('adduser')}}">
                     <div class="row">
                       <div class="col-md-12">
                         <div class="form-group">
-                          <select type="text" class="form-control" name="platform">
-                            <option value="streamango">Streamango</option>
-                            <option value="streamcherry">Streamcherry</option>
+                          <select type="text" class="form-control" name="type">
+                            <option value="normal">normal</option>
+                            <option value="admin">admin</option>
                           </select>
                         </div>
                       </div>
                     </div>
                     <div class="row">
-                      <div class="col-md-12">
+                      <div class="col-md-6">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Link</label>
-                          <textarea class="form-control" name="link" id="link" cols="30" rows="10"></textarea>
+                          <label class="bmd-label-floating">username</label>
+                          <input class="form-control" name="username" required>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">password</label>
+                          <input class="form-control" name="password" required>
                         </div>
                       </div>
                     </div>
-                    <button type="submit" class="btn btn-primary pull-right">Add Link</button>
+                    <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label class="bmd-label-floating">api login</label>
+                            <input class="form-control" name="api_login" required>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label class="bmd-label-floating">api key</label>
+                            <input class="form-control" name="api_key" required>
+                          </div>
+                        </div>
+                      </div>
+                    <button type="submit" class="btn btn-primary pull-right">Add person</button>
                     <div class="clearfix"></div>
                   </form>
                 </div>
@@ -110,40 +130,34 @@
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header card-header-primary">
-                  <h4 class="card-title ">Links Table</h4>
-                  <p class="card-category"> Here are all the links of our tool</p>
+                  <h4 class="card-title ">Users Table</h4>
+                  <p class="card-category"> Here are all the Users of our tool</p>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
                     <table class="table">
                       <thead class=" text-primary">
                         <th>
-                          ID
+                          username
                         </th>
                         <th>
-                          Platform
+                          api login
                         </th>
                         <th>
-                          current Link
-                        </th>
-                        <th>
-                          Public Link
+                          api key
                         </th>
                       </thead>
                       <tbody>
-                        {% for link in links %}
+                        {% for user in users %}
                         <tr>
                           <td>
-                            {{link[0]}}
+                            {{user[1]}}
                           </td>
                           <td>
-                              {{link[2]}}
+                              {{user[4]}}
                           </td>
                           <td>
-                              {{link[4]}}
-                          </td>
-                          <td>
-                              {{link[1]}}
+                              {{user[5]}}
                           </td>
                         </tr>
                         {% endfor %}

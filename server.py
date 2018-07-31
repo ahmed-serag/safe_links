@@ -11,10 +11,12 @@ import hmac
 from user import user
 from links import links
 import hashlib
+import requests
 from streamango import Streamango
 
 app = Flask(__name__)
 
+URL = "http://server.full-stream.nu"
 DATABASE = 'safe_links'
 USERNAME = 'root'
 PASSWORD = '@Hmed20102010'
@@ -59,28 +61,70 @@ def add_link():
         user = user_ins.getUser(user_id)[0]
         if user:
            if request.form['platform'] == 'streamango':
+            print(request.form['link'])
+            print(request.form['link'].split('\n')[0])
+            for link in request.form['link'].split('\n'):
 
-            new_link = streamango_add_remote_download(
-                url=request.form['link'],
-                username = user[4],
-                key = user[5]
-            )
-            print(new_link)
-            # add link based on the request
-            filename=  new_link['id']
-            public_link= "http://example.com/"+new_link['id']
-            packup_link= new_link['url'].replace('/f/','/embed/'),
-            current_link=new_link['remoteurl']
+                new_link = streamango_add_remote_download(
+                    url=link,
+                    username = user[4],
+                    key = user[5]
+                )
+                print(new_link)
+                # add link based on the request
+                filename=  new_link['id']
+                public_link= URL+"/video-"+new_link['id']
+                packup_link= new_link['url'].replace('/f/','/embed/'),
+                current_link=new_link['remoteurl']
 
-            links_ins.addLink(
-                platform=request.form['platform'], 
-                filename=filename, 
-                current_link=current_link, 
-                packup_link=packup_link, 
-                public_link=public_link, 
-                user=user_id
-            )
+                links_ins.addLink(
+                    platform=request.form['platform'], 
+                    filename=filename, 
+                    current_link=current_link, 
+                    packup_link=packup_link, 
+                    public_link=public_link, 
+                    user=user_id
+                )
     return redirect('/')
+
+@app.route('/video-<string:link>', methods=['GET'])
+def getLink(link):   
+    l = links_ins.getLinks(filename=link)[0]
+    user = user_ins.getUser(l[6])[0]
+    response = requests.get(l[4])
+    print(response.status_code)
+    print("&&&&&&&&&&****************")
+    if(response.status_code == 404):
+        new_link = streamango_add_remote_download(
+            url=l[5],
+            username = user[4],
+            key = user[5]
+        )
+        print(new_link)
+        # add link based on the request
+        packup_link= new_link['url'].replace('/f/','/embed/'),
+        current_link=l[5]
+        links_ins.updateLink(id=l[0], current_link=current_link, packup_link=packup_link, user=user[0])
+        return redirect(current_link)
+    else:
+
+        return redirect(l[4])
+####
+
+@app.route('/adduser', methods=['POST','GET'])
+def adduser():
+    print(request.method)
+    if request.method == "POST" and 'id' in login_session and request.cookies.get('username') and check_secure_val(request.cookies.get('username')):
+        user_ins.addUser(
+            password=haaash(str(request.form['password']).encode('utf-8')), 
+            username=request.form['username'],
+            type=request.form['type'], 
+            api_login=request.form['api_login'], 
+            api_key=request.form['api_key']
+        )
+    users = user_ins.getUser()
+    return render_template('add_user.html', users=users)
+
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -98,6 +142,7 @@ def login():
             return resp    
     return redirect('/')
 ####
+
 @app.route('/logout', methods=['GET'])
 def logout():   
     login_session.clear()
